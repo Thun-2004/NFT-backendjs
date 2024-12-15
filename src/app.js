@@ -1,17 +1,46 @@
 import express from 'express'; 
 import swaggerJsdoc from "swagger-jsdoc"; 
 import swaggerUi from "swagger-ui-express"; 
-import routes from "./routes/index.js"; 
+import userRouter from "./routes/user.js";
+
 
 const app = express(); 
 
 //MIDDLEWARE
 app.use(express.json());
 
-//Routes
-app.use(routes);
-
 // Swagger setup
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - first
+ *         - last
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The Auto-generated id of a user
+ *         first:
+ *           type: string
+ *           description: first name
+ *         last:
+ *           type: string
+ *           descripton: last name
+ *       example:
+ *         id: 1
+ *         first: John 
+ *         last: Doe
+ * 
+ * @swagger
+ *  tags:[
+ *   name: Users, NFTs
+ *   
+ * ]
+ */
+
 const swaggerOptions = {
     definition: {
         openapi: "3.0.0", 
@@ -26,22 +55,15 @@ const swaggerOptions = {
             }
         ]
     }, 
-    apis: ['./src/routes/*.js']
+    apis: ['./src/swagger/*.js']
 }
 
+
 const swaggerSpecs = swaggerJsdoc(swaggerOptions); 
+
+//Route
+app.use("/user", userRouter); 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs))
-
-//test api
-app.get("/", (req, res) => {
-    console.log(swaggerSpecs);
-    res.status(201).send({
-        msg: 'Hello'
-    })
-})
-
-
-
 
 export default app; 
 
