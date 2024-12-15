@@ -12,3 +12,75 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum NFTStatus{
+  AVAILABLE //available in owned collection 
+  LISTED //listed for sale
+  AUCTION //listed for auction
+  SOLD //sold
+}
+
+enum TransactionStatus{
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id                Int           @id @default(autoincrement())
+  email             String        @unique
+  username          String        @unique
+  hashed_password   String
+  salt              String
+  wallet_address    String?       
+  bio               String?
+  profile_img       String?
+  banner_img        String?
+  total_sales       Int?          @default(0)
+  createdAt         DateTime      @default(now())
+  ownedNFTs         NFT[]         @relation("Owner")
+  createdNFTs       NFT[]         @relation("Creator")
+  transactions_buy  Transaction[] @relation("Buyer")
+  transactions_sell Transaction[] @relation("Seller")
+}
+
+model NFT {
+  id               Int      @id @default(autoincrement())
+  name             String
+  price            Decimal?
+  img_url          String?
+  status           NFTStatus
+  tag              Tag      @relation(fields: [tag_id], references: [id])
+  tag_id           Int
+  contract_address String
+  token_id         String
+  token_url        String
+  creator          User     @relation("Creator", fields: [creator_id], references: [id])
+  creator_id       Int
+  owner            User     @relation("Owner", fields: [owner_id], references: [id])
+  owner_id         Int
+  createdAt        DateTime @default(now())
+  expiredAt        DateTime? //in case of auction
+  @@unique([contract_address, token_id])
+}
+
+model Transaction {
+  id              Int      @id @default(autoincrement()) // Unique identifier
+  buyer           User     @relation("Buyer", fields: [buyer_id], references: [id]) // Buyer of the NFT
+  buyer_id        Int // ID of the buyer
+  seller          User     @relation("Seller", fields: [seller_id], references: [id]) // Seller of the NFT
+  seller_id       Int // ID of the seller
+  nft_id          Int // ID of the NFT involved
+  price           Float // Price of the NFT in the transaction
+  currency        String   @default("ETH") // Currency used (e.g., ETH, USDC)
+  transactionHash String // Blockchain transaction hash
+  status          TransactionStatus  // Status of the transaction (e.g., pending, completed, failed)
+  createdAt       DateTime @default(now()) // Timestamp when the transaction was created
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  nfts NFT[]
+}
