@@ -56,14 +56,126 @@
 
 /**
  * @swagger
- * /user/test:
+ * /user/me:
  *   get:
- *     summary: login users
- *     description: login a new user by providing username, and password.
+ *     summary: Retrieve my detail
+ *     description: Retrieve a list of users from id
+ *     tags:
+ *      - Users
+ *     security:
+ *      - bearerAuth: []
+ *     responses:
+ *       200: 
+ *         description: User successfully login
+ *       401: 
+ *         description: Unauthorized
+ *         
+ */
+
+/**
+ * @swagger
+ * /user/{id}:
+ *   get:
+ *     summary: Retrieve a list of JSONPlaceholder users.
+ *     description: Retrieve a list of users from id
+ *     tags:
+ *      - Users
+ *     security:
+ *      - bearerAuth: []
+ *     parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *     responses:
+ *       200: 
+ *         description: User successfully login
+ *       401: 
+ *         description: Unauthorized
+ *         
+ */
+
+/**
+ * @swagger
+ * /user/upload_profile:
+ *   post:
+ *     summary: Upload profile image
+ *     description: Upload profile image
  *     tags:
  *       - Users
- *    
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userProfile:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200: 
+ *         description: User successfully login
+ *       401: 
+ *         description: Unauthorized
+ */
+
+/**
+ * @swagger
+ * /user/upload_profile:
+ *   post:
+ *     summary: Upload profile image
+ *     description: Upload profile image
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userProfile:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200: 
+ *         description: User successfully login
+ *       401: 
+ *         description: Unauthorized
+ */
+
+
+/**
+ * @swagger
+ * /user/{id}/getProfileImg:
+ *   get:
+ *     summary: Retrieve user's profile image
+ *     description: Fetch the profile image of a user by their ID.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: User ID to retrieve the profile image.
+ *         required: true
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
- *         description: User successfully login
+ *         description: Profile image retrieved successfully.
+ *         content:
+ *           image/png:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       404:
+ *         description: Profile not found.
+ *       401:
+ *         description: Unauthorized - Missing or invalid token.
  */

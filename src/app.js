@@ -2,12 +2,14 @@ import express from 'express';
 import swaggerJsdoc from "swagger-jsdoc"; 
 import swaggerUi from "swagger-ui-express"; 
 import userRouter from "./routes/user.js";
+import cookieParser from 'cookie-parser';
 
 
 const app = express(); 
 
 //MIDDLEWARE
 app.use(express.json());
+app.use(cookieParser()); 
 
 // Swagger setup
 /**
@@ -44,6 +46,13 @@ app.use(express.json());
 const swaggerOptions = {
     definition: {
         openapi: "3.0.0", 
+        securitySchema: {
+            bearerAuth: {
+                type: "http", 
+                scheme: "bearer", 
+                bearerFormat: "JWT"
+            }
+        }, 
         info: {
             title: "Express API with Swagger", 
             version: "1.0.0", 
@@ -53,7 +62,16 @@ const swaggerOptions = {
             {
                 url: "http://localhost:3000"
             }
-        ]
+        ], 
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: "http",
+                    scheme: "bearer",
+                    bearerFormat: "JWT" 
+                }
+            }
+        }, 
     }, 
     apis: ['./src/swagger/*.js']
 }
