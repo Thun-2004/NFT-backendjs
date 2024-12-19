@@ -4,9 +4,10 @@ import { ValidateRegister, ValidateLogin } from "../schemas/userRegister.js"
 import { registerUser, 
         loginUser, 
         getUserById, 
-        getNFTsbyUserId, 
         uploadProfileImg, 
-        getProfileImg } from "../controllers/user.js"
+        uploadBannerImg,
+        getProfileImg,
+        getBannerImg } from "../controllers/user.js"
 import { extractUserId } from "../middlewares/auth.js"
 import { upload } from "../utils/fileUpload.js"
 
@@ -84,7 +85,7 @@ router.post("/upload_profile", extractUserId, upload.single("userProfile"),//sam
         if(!profile)
             return res.status(400).send("Upload failed");
 
-        return res.redirect(profile); 
+        return res.status(200).json({ image_url: profile });
         // return res.status(200).send({ msg: profile });
 });
 
@@ -98,23 +99,29 @@ router.get("/:id/getProfileImg",
         return res.status(200).json({ image_url: profile });
 });
 
-router.post("/upload_banner", 
-    (req, res) => {
+router.post("/upload_banner", extractUserId, upload.single("userBanner"),//same as form name 
+    async (req, res) => {
+        const user_id = req.user_id;
+        const banner = await uploadBannerImg(user_id, req.file.buffer, req.file.originalname);
+    
+        if(!banner)
+            return res.status(400).send("Upload banner failed");
+
+        return res.status(200).json({ image_url: banner });
      
 });
 
 
-router.get("/:id/getBannerImg", 
-    (req, res) => {
-        
+router.get("/:id/getBannerImg", extractUserId,
+    async (req, res) => {
+        const user_id = req.params.id;
+        const banner = await getBannerImg(user_id);
+        if(!banner)
+            return res.status(404).send("Banner not found");
+
+        return res.status(200).json({ image_url: banner });
 });
 
-router.get("/:id/NFTs", 
-    (req, res) => {
-        const user_id = req.params.id; 
-        return res.send(getNFTsbyUserId(user_id)); 
-        // return seller data
-});
 
 
 export default router; 

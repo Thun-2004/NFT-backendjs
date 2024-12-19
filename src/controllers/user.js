@@ -73,7 +73,7 @@ export const getUserById = async (user_id) => {
     return user_data
 }
 
-const createBucket = async (buffer, fileName) => {
+export const createBucket = async (buffer, fileName) => {
     try{
         const gcs = storage.bucket(bucketName); 
         const storagepath = `storage_folder/${fileName}`;
@@ -131,8 +131,41 @@ export const getProfileImg = async (user_id) => {
     return encodedImgPath
 }
 
-export const getNFTsbyUserId = (user_id) => {
-    
+export const uploadBannerImg = async (user_id, img_buffer, img_name) => {
+    const gcs_path = await createBucket(img_buffer, img_name);
+    const user = await prisma.user.findUnique({
+        where: {
+            id: parseInt(user_id)
+        }
+    })
+
+    if(!user)
+        return 
+
+    const updated_user = await prisma.user.update({
+        where: {
+            id: parseInt(user_id)
+        },
+        data: {
+            banner_img: gcs_path
+        }
+    })
+
+    return "success"
 }
+
+export const getBannerImg = async (user_id) => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: parseInt(user_id)
+        }
+    }); 
+    if(!user || !user.banner_img)
+        return null
+
+    const encodedImgPath = encodeURI(user.banner_img);
+    return encodedImgPath
+}
+
 
 //bio, profile picture, banner_img

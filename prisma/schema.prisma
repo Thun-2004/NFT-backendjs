@@ -13,14 +13,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum NFTStatus{
-  AVAILABLE //available in owned collection 
+enum NFTStatus {
+  AVAILABLE //available in owned collection
   LISTED //listed for sale
   AUCTION //listed for auction
-  SOLD //sold
+  SOLD //sold : may not need this 
 }
 
-enum TransactionStatus{
+enum TransactionStatus {
   PENDING
   COMPLETED
   FAILED
@@ -50,8 +50,8 @@ model NFT {
   price            Decimal?
   img_url          String?
   status           NFTStatus
-  tag              Tag      @relation(fields: [tag_id], references: [id])
-  tag_id           Int
+  tags             Tag[]   @relation("NFTTags")
+  volume           Int      @default(1)
   contract_address String
   token_id         String
   token_url        String
@@ -61,6 +61,7 @@ model NFT {
   owner_id         Int
   createdAt        DateTime @default(now())
   expiredAt        DateTime? //in case of auction
+  transactions     Transaction[] @relation("Nft") //added row
   @@unique([contract_address, token_id])
 }
 
@@ -70,6 +71,7 @@ model Transaction {
   buyer_id        Int // ID of the buyer
   seller          User     @relation("Seller", fields: [seller_id], references: [id]) // Seller of the NFT
   seller_id       Int // ID of the seller
+  nft             NFT      @relation("Nft", fields: [nft_id], references: [id]) //added row
   nft_id          Int // ID of the NFT involved
   price           Float // Price of the NFT in the transaction
   currency        String   @default("ETH") // Currency used (e.g., ETH, USDC)
@@ -80,7 +82,11 @@ model Transaction {
 
 model Tag {
   id        Int      @id @default(autoincrement())
-  name      String
+  name      String   @unique
   createdAt DateTime @default(now())
-  nfts NFT[]
+  role      String //nft/seller
+  nfts      NFT[]    @relation("NFTTags")
 }
+
+//add row to indicate whether it's nft or user tag
+

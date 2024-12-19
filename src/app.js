@@ -2,8 +2,9 @@ import express from 'express';
 import swaggerJsdoc from "swagger-jsdoc"; 
 import swaggerUi from "swagger-ui-express"; 
 import userRouter from "./routes/user.js";
+import nftRouter from "./routes/nft.js";
+import tagRouter from "./routes/tag.js";
 import cookieParser from 'cookie-parser';
-
 
 const app = express(); 
 
@@ -38,7 +39,7 @@ app.use(cookieParser());
  * 
  * @swagger
  *  tags:[
- *   name: Users, NFTs
+ *   name: Users, NFTs, Tags
  *   
  * ]
  */
@@ -79,8 +80,10 @@ const swaggerOptions = {
 
 const swaggerSpecs = swaggerJsdoc(swaggerOptions); 
 
-//Route
+//Routee
 app.use("/user", userRouter); 
+app.use("/nft", nftRouter);
+app.use("/tag", tagRouter); 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs))
 
 export default app; 

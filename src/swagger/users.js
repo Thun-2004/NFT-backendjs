@@ -179,3 +179,62 @@
  *       401:
  *         description: Unauthorized - Missing or invalid token.
  */
+
+
+/**
+ * @swagger
+ * /user/upload_banner:
+ *   post:
+ *     summary: Upload Banner image
+ *     description: Upload Banner image
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: [] 
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userBanner:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200: 
+ *         description: User successfully login
+ *       401: 
+ *         description: Unauthorized
+ */
+
+
+/**
+ * @swagger
+ * /user/{id}/getBannerImg:
+ *   get:
+ *     summary: Retrieve user's banner image
+ *     description: Fetch the banner image of a user by their ID.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: User ID to retrieve the banner image.
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Banner image retrieved successfully.
+ *         content:
+ *           image/png:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       404:
+ *         description: Banner not found.
+ *       401:
+ *         description: Unauthorized - Missing or invalid token.
+ */
