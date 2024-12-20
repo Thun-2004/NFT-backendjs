@@ -42,40 +42,20 @@
  * @swagger
  * /tag/getTags/{nft_id}:
  *   get:
- *     summary: Get tags for an NFT
- *     description: Retrieves all tags associated with a specific NFT ID.
+ *     summary: Retrieve a list of JSONPlaceholder tags.
+ *     description: Retrieve a list of users from id
  *     tags:
- *       - Tags
+ *      - Tags
  *     parameters:
- *       - name: nft_id
- *         in: path
- *         required: true
- *         description: The ID of the NFT to retrieve tags for.
- *         schema:
- *           type: integer
+ *      - in: path
+ *        name: nft_id
+ *        required: true
+ *        schema:
+ *          type: integer
  *     responses:
- *       200:
- *         description: Tags retrieved successfully.
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                     description: Tag ID.
- *                     example: 1
- *                   name:
- *                     type: string
- *                     description: Tag name.
- *                     example: "Digital"
- *       404:
- *         description: Tags not found.
- *         content:
- *           application/json:
- *             schema:
- *               type: string
- *               example: "Tags not found"
+ *       200: 
+ *         description: User successfully login
+ *       401: 
+ *         description: Unauthorized
+ *         
  */

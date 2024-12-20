@@ -52,10 +52,14 @@ router.get("/:nft_id",
 router.get("/getNFTs/:tag_id", 
     async (req, res) => {
         const tag_id = req.params.tag_id;
+        console.log("tag_id: ", tag_id);
         const nfts = await getNFTsbyTagId(tag_id);
 
-        if(!nfts)
+        // if(!nfts)
+        //     return res.status(404).send("NFTs not found");
+        if (!nfts || nfts.length === 0) {
             return res.status(404).send("NFTs not found");
+        }
 
         res.status(200).send(nfts); 
     }
@@ -113,7 +117,6 @@ router.put("/:nft_id/update_status/:nft_status",
 export default router; 
 
 //get nft by tag_id not return anything
-//get tag by nft_id not return anything
 
 
 

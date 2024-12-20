@@ -53,6 +53,7 @@ export const getNFTsbyUserId = async (user_id) => {
 }
 
 export const getNFTbyId = async (nft_id) => {
+    console.log("nft_id: ", nft_id)
     const nft = await prisma.nFT.findUnique({
         where: {
             id: parseInt(nft_id)
@@ -73,10 +74,29 @@ export const getNFTsbyTagId = async (tag_id) => {
             }
         }
     });
+
+    const result = nfts.map(
+        nft => {
+            return {
+                id: nft.id,
+                name: nft.name,
+                price: nft.price,
+                status: nft.status,
+                creator_id: nft.creator_id,
+                owner_id: nft.owner_id,
+                volumn: nft.volume
+            }
+        }
+    ); 
+
+
+
+    console.log("nfts: ", result);
+
     if(!nfts)
         return null
 
-    return nfts
+    return result
 }
 
 export const getNFTsbyStatus = async (status, user_id) => {

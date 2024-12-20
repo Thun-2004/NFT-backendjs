@@ -5,12 +5,14 @@ import userRouter from "./routes/user.js";
 import nftRouter from "./routes/nft.js";
 import tagRouter from "./routes/tag.js";
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 const app = express(); 
 
 //MIDDLEWARE
 app.use(express.json());
 app.use(cookieParser()); 
+app.use(cors)
 
 // Swagger setup
 /**

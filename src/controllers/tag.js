@@ -31,9 +31,21 @@ export const getTags = async (nft_id) => {
             }
         }
     })
+
     if(!tags)
         return null
 
-    return tags
+    const result = tags.map(
+        tag => {
+            return {
+                id: tag.id,
+                name: tag.name
+            }
+        }
+    ); 
+    
+    console.log("result: ", result); 
+
+    return result
 }
 

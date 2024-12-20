@@ -97,6 +97,34 @@
  *     responses:
  *       200:
  *         description: Successfully retrieved NFTs
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   name:
+ *                     type: string
+ *                     example: "Sample NFT"
+ *                   price:
+ *                     type: number
+ *                     example: 100.0
+ *                   status:
+ *                     type: string
+ *                     example: "Available"
+ *                   creator_id:
+ *                     type: integer
+ *                     example: 123
+ *                   owner_id:
+ *                     type: integer
+ *                     example: 456
+ *                   volume:
+ *                     type: number
+ *                     example: 10
  *       404:
  *         description: NFTs not found
  */
