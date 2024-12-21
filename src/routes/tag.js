@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { checkSchema, validationResult, matchedData } from "express-validator"
-import { getTags, createTag } from "../controllers/tag.js"
+import { getTags, createTag, getTagsById } from "../controllers/tag.js"
 
 const router = Router(); 
 
@@ -24,6 +24,16 @@ router.get("/getTags/:nft_id",
         return res.status(200).send(result);
         // remove tag from nft
 });
+
+router.get("/:tag_id",
+    async (req, res) => {
+        const tag_id = req.params.tag_id;
+        const result = await getTagsById(tag_id);
+        if(!result)
+            return res.status(404).send("Tag not found");
+        return res.status(200).send(result);
+});
+
 
 
 export default router;

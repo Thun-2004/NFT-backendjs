@@ -49,3 +49,17 @@ export const getTags = async (nft_id) => {
     return result
 }
 
+export const getTagsById = async (tag_id) => {
+    const tag = await prisma.tag.findUnique({
+        where: {
+            id : parseInt(tag_id)
+        }
+    })
+
+    if(!tag)
+        return null
+    
+    console.log("result: ", tag); 
+    return tag
+}
+

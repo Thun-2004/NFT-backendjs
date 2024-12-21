@@ -9,6 +9,7 @@ const prisma = new PrismaClient();
 export const registerUser = async (payload) => {
     const existing_user = await prisma.user.findUnique({
         where: {
+            username: payload.username, 
             email: payload.email
         }
     })

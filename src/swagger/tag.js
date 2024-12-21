@@ -59,3 +59,26 @@
  *         description: Unauthorized
  *         
  */
+
+
+/**
+ * @swagger
+ * /tag/{tag_id}:
+ *   get:
+ *     summary: Retrieve a list of JSONPlaceholder tags.
+ *     description: Retrieve a list of users from id
+ *     tags:
+ *      - Tags
+ *     parameters:
+ *      - in: path
+ *        name: tag_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *     responses:
+ *       200: 
+ *         description: Tag successfully return
+ *       401: 
+ *         description: Unauthorized
+ *         
+ */
