@@ -12,7 +12,7 @@ const app = express();
 //MIDDLEWARE
 app.use(express.json());
 app.use(cookieParser()); 
-app.use(cors)
+// app.use(cors)
 
 // Swagger setup
 /**
