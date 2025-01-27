@@ -52,9 +52,10 @@ model NFT {
   status           NFTStatus
   tags             Tag[]   @relation("NFTTags")
   volume           Int      @default(1)
-  contract_address String
-  token_id         String
-  token_url        String
+  // contract_address String
+  // token_id         String
+  // token_url        String
+  //creator_address : User.wallet_address
   creator          User     @relation("Creator", fields: [creator_id], references: [id])
   creator_id       Int
   owner            User     @relation("Owner", fields: [owner_id], references: [id])
@@ -62,7 +63,7 @@ model NFT {
   createdAt        DateTime @default(now())
   expiredAt        DateTime? //in case of auction
   transactions     Transaction[] @relation("Nft") //added row
-  @@unique([contract_address, token_id])
+  // @@unique([contract_address, token_id])
 }
 
 model Transaction {

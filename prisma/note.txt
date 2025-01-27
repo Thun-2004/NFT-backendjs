@@ -1,0 +1,2 @@
+what data should be immutable = put on blockchain 
+for fast access = put on postgres
