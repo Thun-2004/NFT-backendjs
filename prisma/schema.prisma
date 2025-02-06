@@ -52,7 +52,7 @@ model NFT {
   status           NFTStatus
   tags             Tag[]   @relation("NFTTags")
   volume           Int      @default(1)
-  // contract_address String
+  //contract_address String //
   // token_id         String
   // token_url        String
   //creator_address : User.wallet_address

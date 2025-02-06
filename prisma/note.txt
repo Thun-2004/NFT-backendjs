@@ -1,2 +1,6 @@
 what data should be immutable = put on blockchain 
 for fast access = put on postgres
+
+
+store both on IPFS and centralized
+verify metadata(IPFS) with centralized one for every transaction 
