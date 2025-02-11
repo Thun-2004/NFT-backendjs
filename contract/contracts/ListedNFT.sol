@@ -1,15 +1,16 @@
 
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0
+pragma solidity ^0.8.0; 
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "./BaseNFT.sol"; 
 
 //ERC 721 saves most gas cost(store base URL + tokenId)
 
 contract ListedNFT is ERC1155, BaseNFT{
     uint256 tokenId; 
-    uint256 marketFee = 0.01 ether
+    uint256 marketFee = 0.01 ether; 
     uint256 tokenId; 
     address payable owner; 
     address payable seller; 
@@ -17,6 +18,10 @@ contract ListedNFT is ERC1155, BaseNFT{
     string memory metaDataURL; 
     uint256 price;
     uint amount; 
+
+    struct ListedNFT{
+        
+    }
 
     constructor() ERC1155("ListedToken"){
         owner = payable(msg.sender)

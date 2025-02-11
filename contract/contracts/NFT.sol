@@ -120,7 +120,6 @@ contract NFTMarketplace is ERC1155 {
         idToListedToken[tokenId].price = newPrice; 
     }
 
-
     function sellListedToken(uint256 tokenId) public payable{
         //trasfer ownership
         //call when status: listed/ auction being sold
