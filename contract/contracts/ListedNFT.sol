@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 
 //ERC 721 saves most gas cost(store base URL + tokenId)
 
-contract ListedNFT is ERC1155{
+contract ListedNFT is ERC1155, BaseNFT{
     uint256 tokenId; 
     uint256 marketFee = 0.01 ether
     uint256 tokenId; 
@@ -22,11 +22,11 @@ contract ListedNFT is ERC1155{
         owner = payable(msg.sender)
     }
 
-    function mint(uint256 currentTokenId, string memory tokenURI, uint256 amount, uint256 price) public payable{
+    function mint(string memory tokenURI, uint256 amount, uint256 price) public payable{
         require(msg.value == marketFee, "Not enough ether to pay for listing fee"); 
         require(price > 0, "price can't be negative"); 
 
-        tokenId = currentTokenId; 
+        tokenId = _incrementToken(); 
 
         _mint(msg.sender, currentTokenId, amount, ""); 
         safeTransferFrom(msg.sender, address(this), newTokenId, amount, "");
