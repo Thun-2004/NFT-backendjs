@@ -1,31 +1,51 @@
 //SPDX-License_Identifier: MIT
 
-pragma solidity ^0.8.0
+pragma solidity ^0.8.0; 
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "./BaseNFT.sol"; 
 
 contract AuctionNFT is ERC721, BaseNFT {
-    uint256 tokenId; 
-    uint256 marketFee = 0.01 ether
-    address payable owner;
-    address payable seller;
-    address payable highestBidder; 
-    uint256 startingPrice;
-    uint256 highestBid = 0; 
-    uint256 auctionEndTime; 
-
-    constructor() ERC721("AuctionedNFT"){
-        owner = payable(msg.sender)
+   
+    uint256 marketFee = 0.01 ether; 
+    
+    //edit : add struct
+    struct AuctionToken{
+        uint256 tokenId; 
+        uint256 startingPrice;
+        uint256 highestBid; 
+        address payable owner;
+        address payable seller;
+        address payable highestBidder; 
+        uint256 auctionEndTime; 
+        bool isActive; 
     }
 
-    function mint(string memory tokenURI, uint256 price, uint256 auctionEndTime) public payable{
+    mapping(uint256 => AuctionToken) private idToAuctionToken; 
+
+    constructor() ERC721("AuctionedNFT"){
+        owner = payable(msg.sender); 
+    }
+
+    function mint(string memory tokenURI, uint256 price, uint256 auctionDuration) public payable{
         require(msg.value == marketFee, "Not enough ether to pay for listing fee"); 
         require(price > 0, "price can't be negative"); 
-        require(auctionEndTime > currentTime, "Endtime can't be earlier or equal to current time"); 
+
+        //edit 
+        require(auctionDuration > 0, "Endtime can't be earlier or equal to current time"); 
 
         tokenId = _incrementToken(); 
-        auctionEndTime = auctionEndTime; 
-        startingPrice = price; 
+
+        idToAuctionToken[tokenId] = AuctionToken(
+            tokenId,
+            price, 
+            price, 
+            address(this), 
+            msg.sender, 
+            address(this), 
+            block.timestamp + auctionDuration,
+            true 
+        ); 
 
         _mint(msg.sender, tokenId); 
 
@@ -34,17 +54,13 @@ contract AuctionNFT is ERC721, BaseNFT {
         _setTokenURI(tokenId, tokenURI); 
     }
 
-    function getCurrentPrice(uint tokenId) returns (uint256){
+    function getCurrentPrice(uint tokenId) public returns (uint256){
         return highestBid; 
     }
 
-    function startAuction(){
+    function endAuction(uint256 tokenId) private {
 
-    }
-
-    function endAuction(){
-
-    }
+    }   
 
 }
 
