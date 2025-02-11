@@ -63,7 +63,7 @@ contract NFTMarketplace is ERC1155 {
 
     function updateListPrice(uint256 _listPrice) public {
         require(msg.sender == owner, "Only owner can update lsiting price");
-        listPrice = _listPrice; 
+        listPrice = _listPrice;
     }
 
     function getListPrice() public view returns (uint256){ //view = not modify blockchain state , view only
@@ -74,7 +74,7 @@ contract NFTMarketplace is ERC1155 {
     //memory = only need inside a function 
     // msg.sender = one calling fn 
     //newTokenId represents type of NFT
-    function createToken(string memory tokenURI, uint256 amount, uint256 price) public payable returns (uint) {
+    function createListedToken(string memory tokenURI, uint256 amount, uint256 price) public payable returns (uint) {
         require(msg.value == listPrice); 
         require(price > 0, "price can't be negative"); 
        
