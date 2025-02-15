@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 
 contract BaseNFT is Ownable {
-    uint256 public _tokenId = 1; 
+    uint256 private _tokenId = 1; 
 
     constructor() Ownable(msg.sender) {
 

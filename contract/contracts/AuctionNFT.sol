@@ -4,14 +4,16 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "./BaseNFT.sol"; 
 
-contract AuctionNFT is ERC721, BaseNFT{
+contract AuctionNFT is ERC721, BaseNFT, ERC721URIStorage, IERC721Receiver{
    
     uint256 marketFee = 0.01 ether;
-    address payable owner; 
+    // address payable owner; 
     
     //edit : add struct
+    //use struct to avoid multiple mapping 
     struct AuctionToken{
         uint256 tokenId; 
         uint256 startingPrice;
@@ -25,11 +27,28 @@ contract AuctionNFT is ERC721, BaseNFT{
 
     mapping(uint256 => AuctionToken) private idToAuctionToken; 
 
-    constructor() ERC721("AuctionedNFT", "AUC") BaseNFT() { // ✅ Call BaseNFT explicitly
-        owner = payable(msg.sender);
+    constructor() ERC721("AuctionedNFT", "AUC") BaseNFT() ERC721URIStorage() { // ✅ Call BaseNFT explicitly
+        // owner = payable(msg.sender);
     }
 
-    function mint(string memory tokenURI, uint256 price, uint256 auctionDuration) public payable{
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, ERC721URIStorage) returns (bool) {
+        return super.supportsInterface(interfaceId);
+    }
+
+    function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory){
+        return super.tokenURI(tokenId);
+    }
+
+    function onERC721Received(
+        address operator,
+        address from,
+        uint256 tokenId,
+        bytes calldata data
+    ) public override returns (bytes4) {
+        return this.onERC721Received.selector;
+    }
+
+    function mint(string memory _tokenURI, uint256 price, uint256 auctionDuration) public payable{
         require(msg.value == marketFee, "Not enough ether to pay for listing fee"); 
         require(price > 0, "price can't be negative"); 
 
@@ -37,24 +56,25 @@ contract AuctionNFT is ERC721, BaseNFT{
         require(auctionDuration > 0, "Endtime can't be earlier or equal to current time"); 
 
         uint256 tokenId = _incrementToken(); 
+        console.log("Token ID: ", tokenId);
 
         idToAuctionToken[tokenId] = AuctionToken(
             tokenId,
             price, 
-            price, 
+            price,
             payable(address(this)), 
             payable(msg.sender), 
             payable(address(this)), 
             block.timestamp + auctionDuration,
-            true 
-        ); 
+            true
+        );
 
         _mint(msg.sender, tokenId); 
 
-        safeTransferFrom(msg.sender, address(this), tokenId); 
+        safeTransferFrom(msg.sender, address(this),  tokenId); 
 
         // should store URI in 
-        // _setTokenURI(tokenId, tokenURI); 
+        _setTokenURI(tokenId, _tokenURI); 
     }
 
     function getCurrentPrice(uint tokenId) public returns (uint256){
