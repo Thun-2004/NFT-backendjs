@@ -2,10 +2,12 @@
 
 pragma solidity ^0.8.0; 
 
+import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "./BaseNFT.sol"; 
+
 
 contract AuctionNFT is ERC721, BaseNFT, ERC721URIStorage, IERC721Receiver{
    
@@ -51,8 +53,6 @@ contract AuctionNFT is ERC721, BaseNFT, ERC721URIStorage, IERC721Receiver{
     function mint(string memory _tokenURI, uint256 price, uint256 auctionDuration) public payable{
         require(msg.value == marketFee, "Not enough ether to pay for listing fee"); 
         require(price > 0, "price can't be negative"); 
-
-        //edit 
         require(auctionDuration > 0, "Endtime can't be earlier or equal to current time"); 
 
         uint256 tokenId = _incrementToken(); 
@@ -70,10 +70,7 @@ contract AuctionNFT is ERC721, BaseNFT, ERC721URIStorage, IERC721Receiver{
         );
 
         _mint(msg.sender, tokenId); 
-
         safeTransferFrom(msg.sender, address(this),  tokenId); 
-
-        // should store URI in 
         _setTokenURI(tokenId, _tokenURI); 
     }
 
