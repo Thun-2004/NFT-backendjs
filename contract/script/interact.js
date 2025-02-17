@@ -1,14 +1,17 @@
 
+// interaction with the contract using ethers.js
+
 import hre from "hardhat";
 import { ethers } from "ethers"; 
 
 async function main() {
   try {
     // Get the ContractFactory of your SimpleContract
+    
     const SimpleContract = await hre.ethers.getContractFactory("AuctionNFT");
 
     // Connect to the deployed contract
-    const contractAddress = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"; // Replace with your deployed contract address
+    const contractAddress = "0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E"; // Replace with your deployed contract address
     const contract = await SimpleContract.attach(contractAddress);
 
     const tokenURI = "ipfs://test-uri";
@@ -21,17 +24,29 @@ async function main() {
     const tx = await contract.mint(tokenURI, nftPrice, auctionDuration, { value: marketFee });
     const receipt = await tx.wait();
 
-    console.log("Transaction Hash:", receipt.hash); 
-    console.log("Log:", receipt.logs); 
+    // console.log("Transaction Receipt:", receipt);
+    const transferEvents = await contract.queryFilter("Transfer", 0, "latest");
 
-    // let tokenId;
-    // for (const log of receipt.logs) {
-    //   if (log.fragment.name === "Transfer") {
-    //     tokenId = log.args[2]; // `tokenId` is the 3rd argument (index 2)
-    //     console.log("Token ID:", tokenId.toString());
-    //     break; // Stop after finding the first Transfer event
-    //   }
+    console.log("Receipt log:", receipt.logs);
+
+    // if (transferEvents.length === 0) {
+    //     console.log("⚠️ No past Transfer events found!");
+    // } else {
+    //     console.log("🔍 Found past Transfer events:", transferEvents);
     // }
+
+
+    // console.log("Transaction Hash:", receipt.hash); 
+    // console.log("Log:", receipt.gasUsed); 
+
+    let tokenId;
+    for (const log of receipt.logs) {
+      if (log.fragment.name === "Transfer") {
+        tokenId = log.args[2]; // `tokenId` is the 3rd argument (index 2)
+        console.log("Token ID:", tokenId.toString());
+        break; // Stop after finding the first Transfer event
+      }
+    }
 
     // if (!tokenId) {
     //   console.log("⚠️ Token ID not found in logs.");

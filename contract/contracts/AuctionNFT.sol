@@ -6,12 +6,13 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
-import "./BaseNFT.sol"; 
+import "./NFTRegistry.sol"; 
 
 
-contract AuctionNFT is ERC721, BaseNFT, ERC721URIStorage, IERC721Receiver{
+contract AuctionNFT is ERC721, ERC721URIStorage, IERC721Receiver{
    
     uint256 marketFee = 0.01 ether;
+    NFTRegistry public registry; 
     // address payable owner; 
     
     //edit : add struct
@@ -26,11 +27,13 @@ contract AuctionNFT is ERC721, BaseNFT, ERC721URIStorage, IERC721Receiver{
         uint256 auctionEndTime; 
         bool isActive; 
     }
+    
 
     mapping(uint256 => AuctionToken) private idToAuctionToken; 
 
-    constructor() ERC721("AuctionedNFT", "AUC") BaseNFT() ERC721URIStorage() { // ✅ Call BaseNFT explicitly
+    constructor(address registryAddress) ERC721("AuctionedNFT", "AUC") ERC721URIStorage() { // ✅ Call BaseNFT explicitly
         // owner = payable(msg.sender);
+        registry = NFTRegistry(registryAddress); 
     }
 
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, ERC721URIStorage) returns (bool) {
@@ -55,7 +58,7 @@ contract AuctionNFT is ERC721, BaseNFT, ERC721URIStorage, IERC721Receiver{
         require(price > 0, "price can't be negative"); 
         require(auctionDuration > 0, "Endtime can't be earlier or equal to current time"); 
 
-        uint256 tokenId = _incrementToken(); 
+        uint256 tokenId = registry._incrementToken(); 
         console.log("Token ID: ", tokenId);
 
         idToAuctionToken[tokenId] = AuctionToken(
@@ -70,11 +73,13 @@ contract AuctionNFT is ERC721, BaseNFT, ERC721URIStorage, IERC721Receiver{
         );
 
         _mint(msg.sender, tokenId); 
-        safeTransferFrom(msg.sender, address(this),  tokenId); 
+        // emit Transfer(address(0), msg.sender,  tokenId);
         _setTokenURI(tokenId, _tokenURI); 
+        safeTransferFrom(msg.sender, address(this),  tokenId); 
+        
     }
 
-    function getCurrentPrice(uint tokenId) public returns (uint256){
+    function getCurrentPrice(uint tokenId) public view returns (uint256){
         return idToAuctionToken[tokenId].highestBid; 
     }
 

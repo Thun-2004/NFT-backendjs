@@ -24,16 +24,7 @@ describe("AuctionNFT Contract", function () {
         // Mint an NFT
         const tx = await auctionNFT.connect(seller).mint(tokenURI, nftPrice, auctionDuration, { value: marketFee });
         const receipt = await tx.wait();
-    
-        // Extract the minted token ID from the Transfer event
-        // const event = receipt.logs.find((log) => log.event === "Transfer");
-        // const tokenId = event.args[2]; // Extract tokenId from Transfer event
-    
-        // console.log("Minted Token ID:", tokenId); // ✅ Debugging output
-    
-        // // Check if the contract owns the NFT
-        // const owner = await auctionNFT.ownerOf(tokenId);
-        // expect(owner).to.equal(auctionNFT.target); 
+
         const event = receipt.logs.find((log) => log.topics[0] === auctionNFT.interface.getEvent("Transfer").topic);
         expect(event).to.not.be.undefined; // Ensure event was found
 
