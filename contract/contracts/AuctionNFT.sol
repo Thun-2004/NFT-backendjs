@@ -10,7 +10,6 @@ import "./NFTRegistry.sol";
 
 
 contract AuctionNFT is ERC721, ERC721URIStorage, IERC721Receiver{
-   
     uint256 marketFee = 0.01 ether;
     NFTRegistry public registry; 
     // address payable owner; 
@@ -65,17 +64,16 @@ contract AuctionNFT is ERC721, ERC721URIStorage, IERC721Receiver{
             tokenId,
             price, 
             price,
-            payable(address(this)), 
-            payable(msg.sender), 
-            payable(address(this)), 
+            payable(address(this)),
+            payable(msg.sender),
+            payable(address(this)),
             block.timestamp + auctionDuration,
             true
         );
 
-        _mint(msg.sender, tokenId); 
-        // emit Transfer(address(0), msg.sender,  tokenId);
+        _mint(address(this), tokenId); 
         _setTokenURI(tokenId, _tokenURI); 
-        safeTransferFrom(msg.sender, address(this),  tokenId); 
+        // safeTransferFrom(msg.sender, address(this),  tokenId); 
         
     }
 

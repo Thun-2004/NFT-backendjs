@@ -7,17 +7,16 @@ import { ethers } from "ethers";
 async function main() {
   try {
     // Get the ContractFactory of your SimpleContract
-    
     const SimpleContract = await hre.ethers.getContractFactory("AuctionNFT");
 
     // Connect to the deployed contract
-    const contractAddress = "0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E"; // Replace with your deployed contract address
+    const contractAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"; // Replace with your deployed contract address
     const contract = await SimpleContract.attach(contractAddress);
 
     const tokenURI = "ipfs://test-uri";
     const nftPrice = ethers.parseEther("1");
     const auctionDuration = 20; // 1 hour in seconds
-    const marketFee = ethers.parseEther("0.01");
+    const marketFee = ethers.parseEther("0.01"); 
 
     // contract.mint(tokenURI, nftPrice, auctionDuration, { value: marketFee }); 
     // console.log not show token id since mint didn;t wait for the transaction to be finished so it skips the console.log
